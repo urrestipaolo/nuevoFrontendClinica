@@ -1,13 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import Estado from '../componentes/Estado'
-import { useFetch } from '../hooks/useFetch'
+import { useApi } from '../hooks/useApi'
 import { medicosService } from '../services/medicos'
 import { useCitasStore } from '../stores/useCitasStore'
 import { usePacientesStore } from '../stores/usePacienteStore'
 import { nombreCompleto } from '../hooks/format'
 
-// Valor mínimo para <input type="datetime-local"> (hora local actual)
+
 function ahoraLocal() {
   const d = new Date()
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset())
@@ -24,9 +24,8 @@ export default function PaginaNuevaCita() {
   const errorCita = useCitasStore((s) => s.error)
   const limpiarErrorCita = useCitasStore((s) => s.limpiarError)
 
-  const medicosQ = useFetch(medicosService.listar)
+  const medicosQ = useApi(medicosService.listar)
 
-  // Estado local de UI: campos del formulario
   const [pacienteId, setPacienteId] = useState('')
   const [medicoId, setMedicoId] = useState('')
   const [fecha, setFecha] = useState('')
@@ -78,7 +77,7 @@ export default function PaginaNuevaCita() {
       </div>
 
       <Estado
-        cargando={(medicosQ.loading && !medicosQ.data) || (cargandoPacientes && pacientes.length === 0)}
+        cargando={(medicosQ.cargando && !medicosQ.data) || (cargandoPacientes && pacientes.length === 0)}
         error={medicosQ.error ?? errorPacientes}
         onReintentar={() => {
           void medicosQ.recargar()

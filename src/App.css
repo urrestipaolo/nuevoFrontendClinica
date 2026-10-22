@@ -1,3 +1,35 @@
+
+.buscador-pacientes {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.buscador-pacientes input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.spinner-busqueda {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d1d5db;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: girar-busqueda 0.7s linear infinite;
+  transform: translateY(-50%);
+}
+
+@keyframes girar-busqueda {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+
 .page {
   width: min(1080px, calc(100% - 32px));
   margin: 0 auto;

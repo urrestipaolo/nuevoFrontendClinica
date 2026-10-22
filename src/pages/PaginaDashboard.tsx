@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Estado from '../componentes/Estado'
 import EstadoBadge from '../componentes/EstadoBadge'
 import MetricCard from '../componentes/MetricCard'
-import { useFetch } from '../hooks/useFetch'
+import { useApi } from '../hooks/useApi'
 import { medicosService } from '../services/medicos'
 import { useCitasStore } from '../stores/useCitasStore'
 import { FiltroEstadoCita, useFiltrosStore } from '../stores/filtroStore'
@@ -31,8 +31,7 @@ export default function PaginaDashboard() {
   const setEstadoFiltro = useFiltrosStore((s) => s.setEstadoCita)
   const resetFiltros = useFiltrosStore((s) => s.resetFiltros)
 
-  // Los médicos no tienen store en esta consigna: se siguen cargando con el hook
-  const medicosQ = useFetch(medicosService.listar)
+  const medicosQ = useApi(medicosService.listar)
 
   useEffect(() => {
     void cargarPacientes()

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Estado from '../componentes/Estado'
 import MedicoForm from '../componentes/MedicoForm'
 import Modal from '../componentes/Modal'
-import { useFetch } from '../hooks/useFetch'
+import { useApi } from '../hooks/useApi'
 import { getErrorMessage } from '../lib/axios'
 import { especialidadesService } from '../services/especialidades'
 import { medicosService } from '../services/medicos'
@@ -10,8 +10,8 @@ import { useFiltrosStore } from '../stores/filtroStore'
 import type { Medico, MedicoInput } from '../types'
 
 export default function PaginaMedicos() {
-  const medicosQ = useFetch(medicosService.listar)
-  const especialidadesQ = useFetch(especialidadesService.listar)
+  const medicosQ = useApi(medicosService.listar)
+  const especialidadesQ = useApi(especialidadesService.listar)
   const especialidadFiltro = useFiltrosStore((s) => s.especialidadFiltro)
   const setEspecialidad = useFiltrosStore((s) => s.setEspecialidad)
   const resetFiltros = useFiltrosStore((s) => s.resetFiltros)
@@ -31,7 +31,7 @@ export default function PaginaMedicos() {
       `${m.medico} ${nombreEspecialidad(m)}`.toLowerCase().includes(texto),
   )
 
-  const cargando = (medicosQ.loading && !medicosQ.data) || (especialidadesQ.loading && !especialidadesQ.data)
+  const cargando = (medicosQ.cargando && !medicosQ.data) || (especialidadesQ.cargando && !especialidadesQ.data)
   const error = medicosQ.error ?? especialidadesQ.error
   const reintentar = () => {
     void medicosQ.recargar()

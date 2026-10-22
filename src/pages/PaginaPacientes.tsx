@@ -6,6 +6,8 @@ import { useFiltrosStore } from '../stores/filtroStore'
 import { usePacientesStore } from '../stores/usePacienteStore'
 import type { Paciente } from '../types'
 import { formatearFecha, nombreCompleto } from '../hooks/format'
+import { useDebounce } from '../hooks/useDebounce'
+
 
 export default function PaginaPacientes() {
   const pacientes = usePacientesStore((s) => s.pacientes)
@@ -26,15 +28,13 @@ export default function PaginaPacientes() {
   const [seleccionado, setSeleccionado] = useState<Paciente | null>(null)
 
 
+  const queryDebounced = useDebounce(query, 350)
 
-  useEffect(() => {
-    const espera = query ? 300 : 0
-    const t = setTimeout(() => {
-      void cargar(query)
-    }, espera)
-    return () => clearTimeout(t)
-  }, [query, cargar])
-  
+    useEffect(() => {
+    void cargar(queryDebounced)
+    }, [queryDebounced, cargar])
+
+  const buscando = query !== queryDebounced || cargando
 
   function abrirNuevo() {
     limpiarError()
@@ -65,17 +65,32 @@ export default function PaginaPacientes() {
         </button>
       </div>
 
+      {/*sadadasdasd */}
+      
       <div className="barra">
-        <input
+      <div className="buscador-pacientes">
+          <input
           type="search"
           placeholder="Buscar por nombre, email o teléfono"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-        />
-        <button className="btn" onClick={resetFiltros}>
-          Limpiar filtros
-        </button>
+          aria-label="Buscar pacientes"
+          />
+
+          {buscando && (
+            <span
+              className="spinner-busqueda"
+              role="status"
+              aria-label="Buscando pacientes"
+          />
+          )}
       </div>
+
+  <button className="btn" onClick={resetFiltros}>
+    Limpiar filtros
+  </button>
+</div>
+
 
       <Estado
         cargando={cargando && pacientes.length === 0}
