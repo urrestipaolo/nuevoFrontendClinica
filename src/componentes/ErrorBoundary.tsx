@@ -7,7 +7,6 @@ interface State {
   mensaje: string | null
 }
 
-// Evita la pantalla en blanco: si una página falla al renderizar, muestra el motivo
 export default class ErrorBoundary extends Component<Props, State> {
   state: State = { mensaje: null }
 

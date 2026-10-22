@@ -6,11 +6,15 @@ import { useFetch } from '../hooks/useFetch'
 import { getErrorMessage } from '../lib/axios'
 import { especialidadesService } from '../services/especialidades'
 import { medicosService } from '../services/medicos'
+import { useFiltrosStore } from '../stores/filtroStore'
 import type { Medico, MedicoInput } from '../types'
 
 export default function PaginaMedicos() {
   const medicosQ = useFetch(medicosService.listar)
   const especialidadesQ = useFetch(especialidadesService.listar)
+  const especialidadFiltro = useFiltrosStore((s) => s.especialidadFiltro)
+  const setEspecialidad = useFiltrosStore((s) => s.setEspecialidad)
+  const resetFiltros = useFiltrosStore((s) => s.resetFiltros)
   const [busqueda, setBusqueda] = useState('')
   const [formAbierto, setFormAbierto] = useState(false)
   const [seleccionado, setSeleccionado] = useState<Medico | null>(null)
@@ -21,8 +25,10 @@ export default function PaginaMedicos() {
     m.especialidad?.nombre ?? especialidades.find((e) => e.id === m.especialidadId)?.nombre ?? '—'
 
   const texto = busqueda.trim().toLowerCase()
-  const medicos = (medicosQ.data ?? []).filter((m) =>
-    `${m.medico} ${nombreEspecialidad(m)}`.toLowerCase().includes(texto),
+  const medicos = (medicosQ.data ?? []).filter(
+    (m) =>
+      (especialidadFiltro === null || m.especialidadId === especialidadFiltro) &&
+      `${m.medico} ${nombreEspecialidad(m)}`.toLowerCase().includes(texto),
   )
 
   const cargando = (medicosQ.loading && !medicosQ.data) || (especialidadesQ.loading && !especialidadesQ.data)
@@ -81,6 +87,27 @@ export default function PaginaMedicos() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
+        <select
+          aria-label="Filtrar por especialidad"
+          value={especialidadFiltro ?? ''}
+          onChange={(e) => setEspecialidad(e.target.value === '' ? null : Number(e.target.value))}
+        >
+          <option value="">Todas las especialidades</option>
+          {especialidades.map((esp) => (
+            <option key={esp.id} value={esp.id}>
+              {esp.nombre}
+            </option>
+          ))}
+        </select>
+        <button
+          className="btn"
+          onClick={() => {
+            resetFiltros()
+            setBusqueda('')
+          }}
+        >
+          Limpiar filtros
+        </button>
       </div>
 
       <Estado cargando={cargando} error={error} onReintentar={reintentar}>
