@@ -1,11 +1,12 @@
 import { useState, type FormEvent } from 'react'
-import { getErrorMessage } from '../lib/axios'
-import type { Especialidad, Medico, MedicoInput } from '../types'
+import { extraerMensajeError } from '../lib/errorHandler'
+import type { Especialidad, Medico } from '../types'
+import type { CrearMedicoDTO } from '../types/dtos'
 
 interface Props {
-  inicial: Medico | null // null = crear, con valor = editar
+  inicial: Medico | null
   especialidades: Especialidad[]
-  onGuardar: (datos: MedicoInput) => Promise<void>
+  onGuardar: (datos: CrearMedicoDTO) => Promise<void>
   onCancelar: () => void
 }
 
@@ -24,7 +25,7 @@ export default function MedicoForm({ inicial, especialidades, onGuardar, onCance
     try {
       await onGuardar({ medico: nombre.trim(), especialidadId: Number(especialidadId) })
     } catch (err) {
-      setError(getErrorMessage(err))
+      setError(extraerMensajeError(err))
     } finally {
       setGuardando(false)
     }

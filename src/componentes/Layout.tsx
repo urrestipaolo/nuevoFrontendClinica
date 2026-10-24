@@ -6,6 +6,7 @@ const enlaces = [
   { to: '/pacientes', texto: 'Pacientes', end: false },
   { to: '/medicos', texto: 'Médicos', end: false },
   { to: '/citas/nueva', texto: 'Nueva cita', end: false },
+  { to: '/reportes', texto: 'Reportes', end: false },
 ]
 
 export default function Layout() {

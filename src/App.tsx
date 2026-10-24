@@ -5,6 +5,7 @@ import PaginaMedicos from './pages/PaginaMedicos'
 import PaginaNuevaCita from './pages/PaginaNuevaCita'
 import PaginaPacientes from './pages/PaginaPacientes'
 import "./App.css";
+import PaginaReportes from './pages/PaginaReportes'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="pacientes" element={<PaginaPacientes />} />
         <Route path="medicos" element={<PaginaMedicos />} />
         <Route path="citas/nueva" element={<PaginaNuevaCita />} />
+        <Route path="reportes" element={<PaginaReportes />} />
         <Route path="*" element={<p>Página no encontrada</p>} />
       </Route>
     </Routes>

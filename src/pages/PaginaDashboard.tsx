@@ -6,7 +6,7 @@ import MetricCard from '../componentes/MetricCard'
 import { useApi } from '../hooks/useApi'
 import { medicosService } from '../services/medicos'
 import { useCitasStore } from '../stores/useCitasStore'
-import { FiltroEstadoCita, useFiltrosStore } from '../stores/filtroStore'
+import { useFiltrosStore, type FiltroEstadoCita } from '../stores/filtroStore'
 import { usePacientesStore } from '../stores/usePacienteStore'
 import type { EstadoCita, Medico, Paciente } from '../types'
 import { formatearFechaHora, nombreCompleto } from '../hooks/format'
@@ -84,6 +84,10 @@ export default function PaginaDashboard() {
           <MetricCard titulo="Médicos" valor={medicos.length} />
           <MetricCard titulo="Citas pendientes" valor={contar('pendiente')} />
           <MetricCard titulo="Citas completadas" valor={contar('completada')} />
+        </div>
+
+        <div className="enlace-reportes">
+          <Link to="/reportes">Ver reportes completos →</Link>
         </div>
 
         <div className="encabezado">

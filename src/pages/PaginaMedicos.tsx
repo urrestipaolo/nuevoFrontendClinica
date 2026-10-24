@@ -3,11 +3,12 @@ import Estado from '../componentes/Estado'
 import MedicoForm from '../componentes/MedicoForm'
 import Modal from '../componentes/Modal'
 import { useApi } from '../hooks/useApi'
-import { getErrorMessage } from '../lib/axios'
+import { extraerMensajeError } from '../lib/errorHandler'
 import { especialidadesService } from '../services/especialidades'
 import { medicosService } from '../services/medicos'
 import { useFiltrosStore } from '../stores/filtroStore'
-import type { Medico, MedicoInput } from '../types'
+import type { Medico } from '../types'
+import type { CrearMedicoDTO } from '../types/dtos'
 
 export default function PaginaMedicos() {
   const medicosQ = useApi(medicosService.listar)
@@ -48,7 +49,7 @@ export default function PaginaMedicos() {
     setFormAbierto(true)
   }
 
-  async function guardar(datos: MedicoInput) {
+  async function guardar(datos: CrearMedicoDTO) {
     if (seleccionado) await medicosService.actualizar(seleccionado.id, datos)
     else await medicosService.crear(datos)
     setFormAbierto(false)
@@ -62,7 +63,7 @@ export default function PaginaMedicos() {
       await medicosService.eliminar(m.id)
       await medicosQ.recargar()
     } catch (e) {
-      setErrorAccion(getErrorMessage(e))
+      setErrorAccion(extraerMensajeError(e))
     }
   }
 

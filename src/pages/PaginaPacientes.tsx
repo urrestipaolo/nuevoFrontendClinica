@@ -64,8 +64,6 @@ export default function PaginaPacientes() {
           + Nuevo paciente
         </button>
       </div>
-
-      {/*sadadasdasd */}
       
       <div className="barra">
       <div className="buscador-pacientes">

@@ -1,16 +1,17 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { getErrorMessage } from '../lib/axios'
+import { extraerMensajeError } from '../lib/errorHandler'
 import { pacientesService } from '../services/pacientes'
-import type { Paciente, PacienteInput } from '../types'
+import type { Paciente } from '../types'
+import type { ActualizarPacienteDTO, CrearPacienteDTO } from '../types/dtos'
 
 interface PacientesState {
   pacientes: Paciente[]
   cargando: boolean
   error: string | null
   cargar: (query?: string) => Promise<void>
-  crear: (datos: PacienteInput) => Promise<boolean>
-  actualizar: (id: number, datos: PacienteInput) => Promise<boolean>
+  crear: (datos: CrearPacienteDTO) => Promise<boolean>
+  actualizar: (id: number, datos: ActualizarPacienteDTO) => Promise<boolean>
   eliminar: (id: number) => Promise<void>
   limpiarError: () => void
 }
@@ -28,7 +29,7 @@ export const usePacientesStore = create<PacientesState>()(
           const pacientes = await pacientesService.listar({ query: query || undefined })
           set({ pacientes, cargando: false }, false, 'pacientes/cargar/ok')
         } catch (err) {
-          set({ error: getErrorMessage(err), cargando: false }, false, 'pacientes/cargar/error')
+          set({ error: extraerMensajeError(err), cargando: false }, false, 'pacientes/cargar/error')
         }
       },
 
@@ -39,7 +40,7 @@ export const usePacientesStore = create<PacientesState>()(
           set((s) => ({ pacientes: [...s.pacientes, nuevo] }), false, 'pacientes/crear/ok')
           return true
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'pacientes/crear/error')
+          set({ error: extraerMensajeError(err) }, false, 'pacientes/crear/error')
           return false
         }
       },
@@ -57,7 +58,7 @@ export const usePacientesStore = create<PacientesState>()(
           )
           return true
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'pacientes/actualizar/error')
+          set({ error: extraerMensajeError(err) }, false, 'pacientes/actualizar/error')
           return false
         }
       },
@@ -72,7 +73,7 @@ export const usePacientesStore = create<PacientesState>()(
             'pacientes/eliminar/ok',
           )
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'pacientes/eliminar/error')
+          set({ error: extraerMensajeError(err) }, false, 'pacientes/eliminar/error')
         }
       },
 

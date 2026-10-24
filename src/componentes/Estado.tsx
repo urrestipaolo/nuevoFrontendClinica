@@ -7,7 +7,6 @@ interface Props {
   children: ReactNode
 }
 
-// Muestra "Cargando…", el error con botón Reintentar, o el contenido
 export default function Estado({ cargando, error, onReintentar, children }: Props) {
   if (error) {
     return (

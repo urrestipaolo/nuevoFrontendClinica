@@ -17,18 +17,4 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Convierte cualquier error en un mensaje legible para mostrar en pantalla
-export function getErrorMessage(error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    if (!error.response) return "No se pudo conectar con el servidor";
-    return (
-      error.response.data?.message ??
-      error.response.data?.error ??
-      `Error ${error.response.status}`
-    );
-  }
-  if (error instanceof Error) return error.message;
-  return "Ocurrió un error inesperado";
-}
-
 

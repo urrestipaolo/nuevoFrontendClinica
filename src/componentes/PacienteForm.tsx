@@ -1,14 +1,20 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { getErrorMessage } from '../lib/axios'
-import type { Paciente, PacienteInput } from '../types'
+import { usePacientesStore } from '../stores/usePacienteStore'
+import type { Paciente } from '../types'
+import type { CrearPacienteDTO } from '../types/dtos'
 
 interface Props {
   inicial: Paciente | null // null = crear, con valor = editar
-  onGuardar: (datos: PacienteInput) => Promise<void>
-  onCancelar: () => void
+  onCerrar: () => void
 }
 
-export default function PacienteForm({ inicial, onGuardar, onCancelar }: Props) {
+export default function PacienteForm({ inicial, onCerrar }: Props) {
+  // El formulario habla directo con el store: los errores ya pasan por extraerMensajeError ahí
+  const crear = usePacientesStore((s) => s.crear)
+  const actualizar = usePacientesStore((s) => s.actualizar)
+  const error = usePacientesStore((s) => s.error)
+
+  // Estado local de UI (campos del formulario)
   const [form, setForm] = useState({
     nombre: inicial?.nombre ?? '',
     apPaterno: inicial?.apPaterno ?? '',
@@ -18,7 +24,6 @@ export default function PacienteForm({ inicial, onGuardar, onCancelar }: Props) 
     fechaNacimiento: inicial?.fechaNacimiento.slice(0, 10) ?? '',
   })
   const [guardando, setGuardando] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const cambiar = (e: ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -26,21 +31,17 @@ export default function PacienteForm({ inicial, onGuardar, onCancelar }: Props) 
   async function enviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setGuardando(true)
-    setError(null)
-    try {
-      await onGuardar({
-        nombre: form.nombre.trim(),
-        apPaterno: form.apPaterno.trim(),
-        apMaterno: form.apMaterno.trim(),
-        telefono: form.telefono.trim(),
-        email: form.email.trim() || null,
-        fechaNacimiento: new Date(form.fechaNacimiento).toISOString(),
-      })
-    } catch (err) {
-      setError(getErrorMessage(err))
-    } finally {
-      setGuardando(false)
+    const datos: CrearPacienteDTO = {
+      nombre: form.nombre.trim(),
+      apPaterno: form.apPaterno.trim(),
+      apMaterno: form.apMaterno.trim(),
+      telefono: form.telefono.trim(),
+      email: form.email.trim() || null,
+      fechaNacimiento: new Date(form.fechaNacimiento).toISOString(),
     }
+    const ok = inicial ? await actualizar(inicial.id, datos) : await crear(datos)
+    setGuardando(false)
+    if (ok) onCerrar()
   }
 
   return (
@@ -85,7 +86,7 @@ export default function PacienteForm({ inicial, onGuardar, onCancelar }: Props) 
       </div>
 
       <div className="form-acciones">
-        <button type="button" className="btn" onClick={onCancelar}>
+        <button type="button" className="btn" onClick={onCerrar}>
           Cancelar
         </button>
         <button type="submit" className="btn btn-primary" disabled={guardando}>
@@ -95,3 +96,4 @@ export default function PacienteForm({ inicial, onGuardar, onCancelar }: Props) 
     </form>
   )
 }
+

@@ -1,6 +1,5 @@
-
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { getErrorMessage } from '../lib/axios'
+import { extraerMensajeError } from '../lib/errorHandler'
 
 export function useApi<T>(fetcher: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null)
@@ -21,7 +20,7 @@ export function useApi<T>(fetcher: () => Promise<T>) {
       }
     } catch (err: unknown) {
       if (montado.current) {
-        setError(getErrorMessage(err))
+        setError(extraerMensajeError(err))
       }
     } finally {
       if (montado.current) {

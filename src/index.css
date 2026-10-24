@@ -1,3 +1,7 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
 :root {
   --primary: #0f52ba;
   --primary-dark: #0d47a1;
@@ -149,4 +153,19 @@ input:focus, select:focus {
   .nav-link { white-space: nowrap; padding: 8px 10px; }
   .contenido { margin-left: 0; padding: 16px; }
   .fila-campos { grid-template-columns: 1fr; }
+}
+
+/* Reportes */
+.enlace-reportes { text-align: right; margin: 0 0 16px; }
+.enlace-reportes a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.enlace-reportes a:hover { text-decoration: underline; }
+.reportes-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+}
+.reportes-grid > .card { min-width: 0; }
+.grafica-vacia {
+  height: 300px; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 16px; color: var(--muted);
+  border: 1px dashed var(--border); border-radius: 8px;
 }

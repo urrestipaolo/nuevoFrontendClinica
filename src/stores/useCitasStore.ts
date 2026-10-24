@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { getErrorMessage } from '../lib/axios'
+import { extraerMensajeError } from '../lib/errorHandler'
 import { citasService } from '../services/citas'
-import type { Cita, CitaInput, EstadoCita } from '../types'
+import type { Cita, EstadoCita } from '../types'
+import type { CrearCitaDTO } from '../types/dtos'
 
 interface CitasState {
   citas: Cita[]
@@ -13,7 +14,7 @@ interface CitasState {
   cargarPorPaciente: (pacienteId: number) => Promise<void>
   seleccionar: (id: number) => void
   actualizarEstado: (id: number, estado: EstadoCita) => Promise<void>
-  agregarCita: (datos: CitaInput) => Promise<boolean>
+  agregarCita: (datos: CrearCitaDTO) => Promise<boolean>
   eliminar: (id: number) => Promise<void>
   limpiarError: () => void
 }
@@ -32,7 +33,7 @@ export const useCitasStore = create<CitasState>()(
           const citas = await citasService.listar()
           set({ citas, cargando: false }, false, 'citas/cargarTodas/ok')
         } catch (err) {
-          set({ error: getErrorMessage(err), cargando: false }, false, 'citas/cargarTodas/error')
+          set({ error: extraerMensajeError(err), cargando: false }, false, 'citas/cargarTodas/error')
         }
       },
 
@@ -43,7 +44,7 @@ export const useCitasStore = create<CitasState>()(
           set({ citas, cargando: false }, false, 'citas/cargarPorPaciente/ok')
         } catch (err) {
           set(
-            { error: getErrorMessage(err), cargando: false },
+            { error: extraerMensajeError(err), cargando: false },
             false,
             'citas/cargarPorPaciente/error',
           )
@@ -72,7 +73,7 @@ export const useCitasStore = create<CitasState>()(
             'citas/actualizarEstado/ok',
           )
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'citas/actualizarEstado/error')
+          set({ error: extraerMensajeError(err) }, false, 'citas/actualizarEstado/error')
         }
       },
 
@@ -83,7 +84,7 @@ export const useCitasStore = create<CitasState>()(
           set((s) => ({ citas: [...s.citas, nueva] }), false, 'citas/agregarCita/ok')
           return true
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'citas/agregarCita/error')
+          set({ error: extraerMensajeError(err) }, false, 'citas/agregarCita/error')
           return false
         }
       },
@@ -101,7 +102,7 @@ export const useCitasStore = create<CitasState>()(
             'citas/eliminar/ok',
           )
         } catch (err) {
-          set({ error: getErrorMessage(err) }, false, 'citas/eliminar/error')
+          set({ error: extraerMensajeError(err) }, false, 'citas/eliminar/error')
         }
       },
 

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getErrorMessage } from '../lib/axios'
+import { extraerMensajeError } from '../lib/errorHandler'
 
-// Carga datos al montar y expone loading / error / recargar.
-// `fetcher` debe ser estable (una función de un service o declarada fuera del componente).
 export function useFetch<T>(fetcher: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
@@ -14,7 +12,7 @@ export function useFetch<T>(fetcher: () => Promise<T>) {
     try {
       setData(await fetcher())
     } catch (e) {
-      setError(getErrorMessage(e))
+      setError(extraerMensajeError(e))
     } finally {
       setLoading(false)
     }
