@@ -4,17 +4,14 @@ import type { Paciente } from '../types'
 import type { CrearPacienteDTO } from '../types/dtos'
 
 interface Props {
-  inicial: Paciente | null // null = crear, con valor = editar
+  inicial: Paciente | null
   onCerrar: () => void
 }
 
 export default function PacienteForm({ inicial, onCerrar }: Props) {
-  // El formulario habla directo con el store: los errores ya pasan por extraerMensajeError ahí
   const crear = usePacientesStore((s) => s.crear)
   const actualizar = usePacientesStore((s) => s.actualizar)
   const error = usePacientesStore((s) => s.error)
-
-  // Estado local de UI (campos del formulario)
   const [form, setForm] = useState({
     nombre: inicial?.nombre ?? '',
     apPaterno: inicial?.apPaterno ?? '',

@@ -6,7 +6,7 @@ export type FiltroEstadoCita = EstadoCita | 'Todos'
 
 interface FiltrosState {
   queryPacientes: string
-  especialidadFiltro: number | null // null = todas las especialidades
+  especialidadFiltro: number | null
   estadoCitaFiltro: FiltroEstadoCita
   setQueryPacientes: (query: string) => void
   setEspecialidad: (id: number | null) => void

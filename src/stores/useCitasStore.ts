@@ -51,7 +51,6 @@ export const useCitasStore = create<CitasState>()(
         }
       },
 
-      // Busca en las citas que ya están en memoria: no hace ninguna petición a la API
       seleccionar: (id) =>
         set(
           { citaSeleccionada: get().citas.find((c) => c.id === id) ?? null },

@@ -26,6 +26,6 @@ export interface Cita {
   id: number
   pacienteId: number
   medicoId: number
-  fecha: string // ISO
+  fecha: string
   estado: EstadoCita
 }

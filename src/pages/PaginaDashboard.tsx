@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Estado from '../componentes/Estado'
 import EstadoBadge from '../componentes/EstadoBadge'
 import MetricCard from '../componentes/MetricCard'
@@ -10,6 +10,7 @@ import { useFiltrosStore, type FiltroEstadoCita } from '../stores/filtroStore'
 import { usePacientesStore } from '../stores/usePacienteStore'
 import type { EstadoCita, Medico, Paciente } from '../types'
 import { formatearFechaHora, nombreCompleto } from '../hooks/format'
+import { useAuthStore } from '../stores/useAuthStore'
 
 const FILTROS_ESTADO: FiltroEstadoCita[] = ['Todos', 'pendiente', 'completada', 'cancelada']
 
@@ -32,6 +33,16 @@ export default function PaginaDashboard() {
   const resetFiltros = useFiltrosStore((s) => s.resetFiltros)
 
   const medicosQ = useApi(medicosService.listar)
+
+  //PERMITE DE SE VISUALICE SOLO CUANDO ESTAMOS INICIANDO SESION
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+
+  //VARIABLE QUE PERMITE CERRAR LA SESION (EN LAS ETIQUETAS HAY UN BOTON QUE ACCIONA ESTA VARIABLE)
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   useEffect(() => {
     void cargarPacientes()
@@ -64,6 +75,8 @@ export default function PaginaDashboard() {
         <div>
           <h1>Dashboard</h1>
           <p className="muted">Resumen de la clínica</p>
+        </div>
+        <div>
         </div>
         <Link to="/citas/nueva" className="btn btn-primary">
           + Agendar cita
