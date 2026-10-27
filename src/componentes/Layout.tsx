@@ -1,55 +1,47 @@
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import ErrorBoundary from './ErrorBoundary'
+import React from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 
-const enlaces = [
-  { to: '/', texto: 'Dashboard', end: false },
-  { to: '/login', texto: 'Login', end: true},
-  { to: '/pacientes', texto: 'Pacientes', end: false },
-  { to: '/medicos', texto: 'Médicos', end: false },
-  { to: '/citas/nueva', texto: 'Nueva cita', end: false },
-  { to: '/reportes', texto: 'Reportes', end: false },
-]
-
-/* //PERMITE DE SE VISUALICE SOLO CUANDO ESTAMOS INICIANDO SESION
+export default function Layout() {
+  const { usuario, logout } = useAuthStore();
   const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout);
 
-  //VARIABLE QUE PERMITE CERRAR LA SESION (EN LAS ETIQUETAS HAY UN BOTON QUE ACCIONA ESTA VARIABLE)
   const handleLogout = () => {
     logout();
-    navigate("/login", { replace: true });
-  }; */
+    navigate('/login', { replace: true });
+  };
 
-export default function Layout() {
-  const { pathname } = useLocation()
   return (
-    <div className="layout">
-      <aside className="sidebar">
-        <div className="marca">
-          Clínica Salud PAOLO
-          <small>Panel del Sistema Clinico :D</small>
-
-          
+    <div className="min-h-screen bg-stone-100 flex flex-col">
+      {/* Header con datos de sesión */}
+      <header className="bg-white shadow-sm border-b border-stone-200 px-6 py-4 flex justify-between items-center">
+        <div>
+          <span className="font-bold text-lg text-emerald-700">Clínica - Sistema Médico</span>
         </div>
-        <nav className="nav">
-          {enlaces.map((e) => (
-            <NavLink
-              key={e.to}
-              to={e.to}
-              end={e.end}
-              className={({ isActive }) => (isActive ? 'nav-link activo' : 'nav-link')}
-            >
-              {e.texto}
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
-      <main className="contenido">
-        <ErrorBoundary key={pathname}>
-          <Outlet />
-        </ErrorBoundary>
+
+        <div className="flex items-center gap-4">
+          {usuario && (
+            <div className="text-right">
+              <p className="text-sm font-semibold text-slate-800">{usuario.nombre}</p>
+              <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">
+                {usuario.rol}
+              </span>
+            </div>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 text-sm font-medium rounded-lg transition-colors border border-rose-200"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </header>
+
+      {/* Contenido principal */}
+      <main className="flex-1 p-6">
+        <Outlet />
       </main>
     </div>
-  )
+  );
 }

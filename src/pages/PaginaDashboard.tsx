@@ -34,15 +34,7 @@ export default function PaginaDashboard() {
 
   const medicosQ = useApi(medicosService.listar)
 
-  //PERMITE DE SE VISUALICE SOLO CUANDO ESTAMOS INICIANDO SESION
-  const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout);
-
-  //VARIABLE QUE PERMITE CERRAR LA SESION (EN LAS ETIQUETAS HAY UN BOTON QUE ACCIONA ESTA VARIABLE)
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
+  
 
   useEffect(() => {
     void cargarPacientes()
