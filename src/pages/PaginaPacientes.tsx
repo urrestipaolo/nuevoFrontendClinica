@@ -3,36 +3,26 @@ import Estado from '../componentes/Estado'
 import Modal from '../componentes/Modal'
 import PacienteForm from '../componentes/PacienteForm'
 import { useFiltrosStore } from '../stores/filtroStore'
-import { usePacientesStore } from '../stores/usePacienteStore'
+import { usePacientes } from '../hooks/usePacientes'
 import type { Paciente } from '../types'
 import { formatearFecha, nombreCompleto } from '../hooks/format'
 import { useDebounce } from '../hooks/useDebounce'
 
-
 export default function PaginaPacientes() {
-  const pacientes = usePacientesStore((s) => s.pacientes)
-  const cargando = usePacientesStore((s) => s.cargando)
-  const error = usePacientesStore((s) => s.error)
-  const cargar = usePacientesStore((s) => s.cargar)
-  const eliminar = usePacientesStore((s) => s.eliminar)
-  const limpiarError = usePacientesStore((s) => s.limpiarError)
-
+  const { pacientes, cargando, error, cargar, eliminar, limpiarError } = usePacientes()
 
   const query = useFiltrosStore((s) => s.queryPacientes)
   const setQuery = useFiltrosStore((s) => s.setQueryPacientes)
   const resetFiltros = useFiltrosStore((s) => s.resetFiltros)
 
-
-
   const [formAbierto, setFormAbierto] = useState(false)
   const [seleccionado, setSeleccionado] = useState<Paciente | null>(null)
 
-
   const queryDebounced = useDebounce(query, 350)
 
-    useEffect(() => {
+  useEffect(() => {
     void cargar(queryDebounced)
-    }, [queryDebounced, cargar])
+  }, [queryDebounced, cargar])
 
   const buscando = query !== queryDebounced || cargando
 
@@ -66,13 +56,13 @@ export default function PaginaPacientes() {
       </div>
       
       <div className="barra">
-      <div className="buscador-pacientes">
+        <div className="buscador-pacientes">
           <input
-          type="search"
-          placeholder="Buscar por nombre, email o teléfono"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Buscar pacientes"
+            type="search"
+            placeholder="Buscar por nombre, email o teléfono"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Buscar pacientes"
           />
 
           {buscando && (
@@ -80,15 +70,14 @@ export default function PaginaPacientes() {
               className="spinner-busqueda"
               role="status"
               aria-label="Buscando pacientes"
-          />
+            />
           )}
+        </div>
+
+        <button className="btn" onClick={resetFiltros}>
+          Limpiar filtros
+        </button>
       </div>
-
-  <button className="btn" onClick={resetFiltros}>
-    Limpiar filtros
-  </button>
-</div>
-
 
       <Estado
         cargando={cargando && pacientes.length === 0}

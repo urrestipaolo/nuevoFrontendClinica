@@ -11,10 +11,10 @@ export function RutaProtegida({ rolesPermitidos }: RutaProtegidaProps) {
   if (!autenticado || !token) {
     return <Navigate to="/login" replace />;
   }
-
+/* 
   if (rolesPermitidos && usuario && !rolesPermitidos.includes(usuario.rol)) {
     return <Navigate to="/sin-acceso" replace />;
-  }
+  } */
 
   return <Outlet />;
 }

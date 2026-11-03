@@ -1,3 +1,4 @@
+import { api } from '../lib/axios'
 import type { Cita, EstadoCita } from '../types'
 import type { ActualizarCitaDTO, CambiarEstadoCitaDTO, CrearCitaDTO } from '../types/dtos'
 import { crearServicio } from './crud'
@@ -10,4 +11,6 @@ export const citasService = {
     const cambio: CambiarEstadoCitaDTO = { estado }
     return base.actualizar(id, cambio)
   },
+
+  
 }

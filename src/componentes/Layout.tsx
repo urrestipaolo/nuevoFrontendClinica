@@ -16,7 +16,7 @@ export default function Layout() {
       {/* Header con datos de sesión */}
       <header className="bg-white shadow-sm border-b border-stone-200 px-6 py-4 flex justify-between items-center">
         <div>
-          <span className="font-bold text-lg text-emerald-700">Clínica - Sistema Médico</span>
+          <span className="font-bold text-lg text-emerald-700">PAOLO CLINICA</span>
         </div>
 
         <div className="flex items-center gap-4">

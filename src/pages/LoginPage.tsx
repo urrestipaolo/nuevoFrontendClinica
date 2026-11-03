@@ -8,8 +8,12 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  
+  // Extraemos la acción login del store
   const loginStore = useAuthStore((s) => s.login);
+  
   const [errorServidor, setErrorServidor] = useState("");
+  
   const {
     register,
     handleSubmit,
@@ -23,18 +27,30 @@ export function LoginPage() {
       setErrorServidor("");
       
       const respuesta = await authService.login(data);
+      console.log("Respuesta del backend:", respuesta);
 
+      // Guardamos en el store usando el token real del backend y un rol válido del enum
       loginStore(respuesta.access_token, {
-        nombre: respuesta.user_name,
-        rol: respuesta.user_role,
+        nombre: "Usuario Clínica",
+        rol: "GERENCIA", // Rol válido según tu enum (GERENCIA, MEDICO, RECEPCIONISTA)
       });
 
       navigate("/", { replace: true });
     } catch (err: unknown) {
+      console.error("Error en login:", err);
       setErrorServidor(
-        err instanceof Error ? err.message : "Credenciales incorrectas o error al conectar con el servidor."
+        "Credenciales incorrectas o error al conectar con el servidor.",
       );
     }
+  };
+
+  // BOTÓN DE ACCESO RÁPIDO / MODO PRUEBA (Sin backend)
+  const handleModoPrueba = () => {
+    loginStore("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJwYW9sb0BnbWFpbC5jb20iLCJyb2xlIjoiR0VSRU5DSUEiLCJpYXQiOjE3OTMzMTQ0MDAsImV4cCI6MTc5MzM0MzIwMH0.EAQe7afTex_7kOpEmeN-NU_LSxURfShJ-GmlfLPursQ", {
+      nombre: "Usuario DEMO",
+      rol: "GERENCIA", // O 'RECEPCIONISTA' / 'MEDICO'
+    });
+    navigate("/", { replace: true });
   };
 
   return (
@@ -47,6 +63,9 @@ export function LoginPage() {
             <div className="flex items-center gap-3">
               <span className="text-xl font-bold tracking-tight">SISTEMA CLÍNICO - GESTIÓN INTEGRAL</span>
             </div>
+            <p className="text-sky-100 text-sm">
+              Módulo de autenticación y control de accesos basado en roles y Zustand.
+            </p>
           </div>
 
           {/* Formulario de Acceso */}
@@ -61,7 +80,6 @@ export function LoginPage() {
                 </p>
               </div>
 
-              {/* Alerta de Error de Servidor */}
               {errorServidor && (
                 <div className="mb-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-600 border border-rose-200">
                   {errorServidor}
@@ -114,6 +132,21 @@ export function LoginPage() {
                   )}
                 </button>
               </form>
+
+              {/* SEPARADOR Y BOTÓN DE ACCESO RÁPIDO */}
+              <div className="mt-6 border-t border-stone-200 pt-6">
+                <button
+                  type="button"
+                  onClick={handleModoPrueba}
+                  className="h-11 w-full rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold transition hover:bg-slate-200 border border-stone-300 flex items-center justify-center gap-2"
+                >
+                  PRESIONA AQUI PARA ENTRAR AL DASHBOARD SIN INICIAR SESION
+                </button>
+                <p className="mt-2 text-center text-xs text-slate-400">
+                  Para acceder al dashboard y funciones
+                </p>
+              </div>
+
             </div>
           </div>
         </section>

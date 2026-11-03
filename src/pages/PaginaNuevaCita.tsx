@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom'
 import Estado from '../componentes/Estado'
 import { useApi } from '../hooks/useApi'
 import { medicosService } from '../services/medicos'
-import { useCitasStore } from '../stores/useCitasStore'
-import { usePacientesStore } from '../stores/usePacienteStore'
+import { useCitas } from '../hooks/useCitas'
+import { usePacientes } from '../hooks/usePacientes'
 import { nombreCompleto } from '../hooks/format'
-
 
 function ahoraLocal() {
   const d = new Date()
@@ -15,14 +14,20 @@ function ahoraLocal() {
 }
 
 export default function PaginaNuevaCita() {
-  const pacientes = usePacientesStore((s) => s.pacientes)
-  const cargandoPacientes = usePacientesStore((s) => s.cargando)
-  const errorPacientes = usePacientesStore((s) => s.error)
-  const cargarPacientes = usePacientesStore((s) => s.cargar)
+  // Consumimos pacientes mediante el hook (adiós a usePacientesStore directo)
+  const { 
+    pacientes, 
+    cargando: cargandoPacientes, 
+    error: errorPacientes, 
+    cargar: cargarPacientes 
+  } = usePacientes()
 
-  const agregarCita = useCitasStore((s) => s.agregarCita)
-  const errorCita = useCitasStore((s) => s.error)
-  const limpiarErrorCita = useCitasStore((s) => s.limpiarError)
+  // Consumimos citas mediante el hook (adiós a useCitasStore directo)
+  const { 
+    agregarCita, 
+    error: errorCita, 
+    limpiarError: limpiarErrorCita 
+  } = useCitas()
 
   const medicosQ = useApi(medicosService.listar)
 

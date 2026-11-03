@@ -8,15 +8,13 @@ import PaginaReportes from './pages/PaginaReportes';
 import { LoginPage } from './pages/LoginPage';
 import { useAuthStore } from './stores/useAuthStore';
 import { useEffect, useState } from 'react';
-import { RutaProtegida } from './componentes/RutaProtegida';
 import './App.css';
 
-interface RutaProtegidaProps {
+/* interface RutaProtegidaProps {
   rolesPermitidos?: string[];
 }
 
-/* function RutaProtegida({ rolesPermitidos }: RutaProtegidaProps) {
-  // Selectores independientes para garantizar que React detecte los cambios de estado al instante
+function RutaProtegida({ rolesPermitidos }: RutaProtegidaProps) {
   const autenticado = useAuthStore((state) => state.autenticado);
   const token = useAuthStore((state) => state.token);
   const usuario = useAuthStore((state) => state.usuario);
@@ -26,18 +24,12 @@ interface RutaProtegidaProps {
   );
 
   useEffect(() => {
-    // Si ya está rehidratado, nos aseguramos de marcarlo
-    if (useAuthStore.persist.hasHydrated()) {
-      setRehidratado(true);
-    }
-
     const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
       setRehidratado(true);
     });
     return unsubscribe;
   }, []);
 
-  // Mientras Zustand carga del localStorage, mostramos un spinner para evitar saltos falsos
   if (!rehidratado) {
     return (
       <div className="flex justify-center items-center h-screen bg-stone-50">
@@ -46,17 +38,20 @@ interface RutaProtegidaProps {
     );
   }
 
-  // VALIDACIÓN CLAVE: Verificamos token o autenticado de forma flexible
+  // Validamos que exista autenticación y token
   if (!autenticado || !token) {
     return <Navigate to="/login" replace />;
-  }
+  } */
 
-  // Validación de roles (si se requieren)
+/*   console.log("Rutas permitidas para esta vista:", rolesPermitidos);
+  console.log("Rol actual del usuario:", usuario?.rol);
+  // Validación de roles utilizando el objeto usuario
   if (rolesPermitidos && usuario && !rolesPermitidos.includes(usuario.rol)) {
     return <Navigate to="/sin-acceso" replace />;
-  }
+  } */
+  
 
-  return <Outlet />;
+  /* return <Outlet />;
 } */
 
 export default function App() {
@@ -75,7 +70,6 @@ export default function App() {
       />
 
       {/* Rutas Protegidas */}
-      <Route element={<RutaProtegida />}>
         <Route element={<Layout />}>
           <Route index element={<PaginaDashboard />} />
           <Route path="pacientes" element={<PaginaPacientes />} />
@@ -83,11 +77,8 @@ export default function App() {
           <Route path="citas/nueva" element={<PaginaNuevaCita />} />
 
           {/* Ruta protegida por roles */}
-          <Route element={<RutaProtegida rolesPermitidos={['GERENCIA', 'ADMIN']} />}>
             <Route path="reportes" element={<PaginaReportes />} />
           </Route>
-        </Route>
-      </Route>
 
       {/* Ruta 404 */}
       <Route 

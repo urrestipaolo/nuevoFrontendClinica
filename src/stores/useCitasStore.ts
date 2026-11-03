@@ -37,6 +37,7 @@ export const useCitasStore = create<CitasState>()(
         }
       },
 
+
       cargarPorPaciente: async (pacienteId) => {
         set({ cargando: true, error: null }, false, 'citas/cargarPorPaciente')
         try {
