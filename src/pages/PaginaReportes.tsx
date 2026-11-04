@@ -13,9 +13,8 @@ import {
 import TarjetaGrafica from '../componentes/Grafico'
 import { useApi } from '../hooks/useApi'
 import { reportesService } from '../services/reportes'
-import { useCitasStore } from '../stores/useCitasStore'
 import { citasUltimosDias } from '../hooks/reportesHoraLocal'
-
+import { useCitas } from '../hooks/useCitas'
 
 import { ErrorBoundary } from '../componentes/ui/ErrorBoundary'
 import { AlertaBanner } from '../componentes/ui/AlertaBanner'
@@ -24,10 +23,9 @@ import { EstadoVacio } from '../componentes/ui/EstadoVacio'
 export default function PaginaReportes() {
   const especialidadesQ = useApi(reportesService.citasPorEspecialidad)
 
-  const citas = useCitasStore((s) => s.citas)
-  const cargandoCitas = useCitasStore((s) => s.cargando)
-  const errorCitas = useCitasStore((s) => s.error)
-  const cargarCitas = useCitasStore((s) => s.cargarTodas)
+  // Consumimos el estado y acciones a través del Custom Hook
+  const { citas, cargando: cargandoCitas, error: errorCitas, cargarTodas: cargarCitas } = useCitas()
+
   const [citasListas, setCitasListas] = useState(false)
   const [aviso, setAviso] = useState<string>('Visualizando reportes analíticos de la clínica.')
 
@@ -49,7 +47,6 @@ export default function PaginaReportes() {
           </div>
         </div>
 
-        {/* Uso de AlertaBanner de la carpeta UI */}
         {aviso && (
           <div style={{ marginBottom: '1rem' }}>
             <AlertaBanner tipo="info" mensaje={aviso} onCerrar={() => setAviso('')} />

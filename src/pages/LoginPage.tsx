@@ -9,7 +9,6 @@ import { useAuthStore } from "../stores/useAuthStore";
 export function LoginPage() {
   const navigate = useNavigate();
   
-  // Extraemos la acción login del store
   const loginStore = useAuthStore((s) => s.login);
   
   const [errorServidor, setErrorServidor] = useState("");

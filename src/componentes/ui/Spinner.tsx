@@ -3,12 +3,21 @@ interface SpinnerProps {
 }
 
 export function Spinner({ fullscreen = false }: SpinnerProps) {
+  const spinner = (
+    <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+  );
+
   if (fullscreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-sky-600 border-t-transparent" />
+      <div className="flex h-screen items-center justify-center">
+        {spinner}
       </div>
     );
   }
-  return <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-sky-600 border-t-transparent" />;
+
+  return (
+    <div className="flex justify-center py-8">
+      {spinner}
+    </div>
+  );
 }
